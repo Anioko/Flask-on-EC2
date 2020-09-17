@@ -31,20 +31,20 @@ This repository contains a Flask "Hello World" web app that can quickly be deplo
 1. Clone this repository.
 
  ```
- git clone https://github.com/kennysong/Flask-on-EC2
+ git clone https://github.com/anioko/Flask-on-EC2
  ```
 
 2. Move the `demoapp` subdirectory to `/var/www/` and chown it.
 
  ```
- sudo mv Flask-on-EC2/demoapp /var/www/demoapp
- sudo chown -R ubuntu:www-data /var/www/demoapp
+ sudo mv Flask-on-EC2/demoapp /var/www/flaskapp
+ sudo chown -R ubuntu:www-data /var/www/flaskapp
  ```
 
 3. Go into the directory, start virtualenv, and install some modules with pip.
 
  ```
- cd /var/www/demoapp
+ cd /var/www/flaskapp
  python3 -m venv venv
  . venv/bin/activate
  pip3 install -r requirements.txt
@@ -56,7 +56,7 @@ This repository contains a Flask "Hello World" web app that can quickly be deplo
 
  ```
  sudo rm /etc/nginx/sites-enabled/default
- sudo ln -s /var/www/demoapp/demoapp_nginx.conf /etc/nginx/conf.d
+ sudo ln -s /var/www/flaskapp/flaskapp_nginx.conf /etc/nginx/conf.d
  sudo mkdir -p /var/log/uwsgi
  sudo chown ubuntu:www-data /var/log/uwsgi
  sudo chmod g+w /var/log/uwsgi
@@ -66,15 +66,15 @@ This repository contains a Flask "Hello World" web app that can quickly be deplo
 
  ```
  sudo /etc/init.d/nginx restart
- uwsgi --ini /var/www/demoapp/demoapp_uwsgi.ini
- rm /var/log/uwsgi/demoapp_uwsgi.log
+ uwsgi --ini /var/www/flaskapp/flaskapp_uwsgi.ini
+ rm /var/log/uwsgi/flaskapp_uwsgi.log
  ```
 
 7. Now, visiting the IP address should show our Flask app. However, we want uWSGI to run as a background service, using uWSGI Emperor and systemd. We set up new directories and config files to do so.
 
  ```
  sudo mkdir -p /etc/uwsgi/vassals
- sudo ln -s /var/www/demoapp/demoapp_uwsgi.ini /etc/uwsgi/vassals
+ sudo ln -s /var/www/flaskapp/flaskapp_uwsgi.ini /etc/uwsgi/vassals
  sudo cp uwsgi.service /etc/systemd/system
  sudo systemctl enable uwsgi
  sudo systemctl start uwsgi
